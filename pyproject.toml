@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "funclift"
+version = "0.1.0"
+description = ""
+authors = ["Essentier <support@essentier.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = {git = "https://github.com/python/mypy.git"}
+hypothesis = "^6.72.2"
+flake8 = "^6.0.0"
+black = "^23.3.0"
+pytest-asyncio = "^0.21.0"
+mkdocs = "^1.4.2"
+mkdocstrings = {extras = ["python"], version = "^0.21.2"}
+mkdocs-material = "^9.1.8"
+mkdocs-gen-files = "^0.4.0"
+
+
+[tool.pytest.ini_options]
+log_cli = "True"
+log_cli_level = "DEBUG"
+log_level = "DEBUG"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

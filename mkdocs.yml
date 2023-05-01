@@ -1,0 +1,21 @@
+site_name: funclift docs
+use_directory_urls: false
+
+theme:
+  name: "material"
+  logo: assets/logo.png
+  favicon: images/favicon.ico
+  features:
+    - navigation.path
+  palette:
+    primary: white
+
+extra:
+  homepage: https://www.essentier.com/
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - docs/gen_ref_pages.py
+  - mkdocstrings
