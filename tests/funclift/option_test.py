@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 # def add(a: int, b: int) -> int:
 #     return a + b
 
-
+    
 def option_add(a: Option[int], b: Option[int]) -> Option[int]:
     return a.flatmap(lambda x: b.flatmap(lambda y: Some(x + y)))
 
@@ -22,7 +22,6 @@ def option_add2(a: Option[int], b: Option[int]) -> Option[int]:
     monads = get_monads()
     result = run_monads(monads)
     return result
-
 
 def test_option_add2():
     some5 = Some(5)

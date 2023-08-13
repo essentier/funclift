@@ -12,6 +12,7 @@ E = TypeVar('E')
 A = TypeVar('A')
 B = TypeVar('B')
 C = TypeVar('C', covariant=True)
+D = TypeVar('D')
 
 
 class Either(Generic[L, R]):
@@ -40,6 +41,13 @@ class Either(Generic[L, R]):
             Right[E]: a [`Right`][funclift.types.either.Right] instance that represents a success case.
         """
         return Right(a)
+
+
+    @abstractmethod
+    def bimap(self, fl: Callable[[L], C],
+              fr: Callable[[R], D]) -> Either[C, D]:
+        ...
+
 
     @abstractmethod
     def fmap(self, f: Callable[[R], B]) -> Either[L, B]:
@@ -75,6 +83,10 @@ class Right(Either[Any, A]):
     value: A
     mtype: ClassVar[type] = Either
 
+    def bimap(self, f: Callable[[B], D],
+              g: Callable[[A], C]) -> Right[C]:
+        return Right(g(self.value))
+
     def fmap(self, f: Callable[[A], B]) -> Right[B]:
         return Right(f(self.value))
 
@@ -91,6 +103,10 @@ class Left(Either[L, Any]):
 
     value: L
     mtype: ClassVar[type] = Either
+
+    def bimap(self, f: Callable[[L], D],
+              g: Callable[[A], C]) -> Left[D]:
+        return Left(f(self.value))
 
     def fmap(self, f: Callable[[Any], Any]) -> Left[L]:
         return self

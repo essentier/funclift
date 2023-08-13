@@ -1,23 +1,25 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, Generic, TypeVar
+from functools import wraps
 
 from funclift.monoid import Monoid
 import logging
 
 log = logging.getLogger(__name__)
 
-W = TypeVar('W', bound=Monoid)
-V = TypeVar('V')
-A = TypeVar('A')
-B = TypeVar('B')
-C = TypeVar('C')
-E = TypeVar('E')
+W = TypeVar("W", bound=Monoid)
+V = TypeVar("V")
+A = TypeVar("A")
+B = TypeVar("B")
+C = TypeVar("C")
+E = TypeVar("E")
 
 
 @dataclass
 class Id(Generic[A]):
     """Id is a [`Monad`][funclift.monad.Monad]."""
+
     a: A
 
     def fmap(self, f: Callable[[A], B]) -> Id[B]:
@@ -33,3 +35,11 @@ class Id(Generic[A]):
 
     def flatmap(self, f: Callable[[A], Id[B]]) -> Id[B]:
         return f(self.a)
+
+
+def id_effect(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs) -> Id[A]:
+        return Id(func(*args, **kwargs))
+
+    return wrapper

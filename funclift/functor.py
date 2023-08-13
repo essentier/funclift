@@ -23,3 +23,17 @@ class Functor(Generic[F, A], Protocol):
             Functor[F, B]: A value of type F[B]
         """
         ...
+
+class Contravariant(Generic[F, A], Protocol):
+    """Contravariant functor"""
+
+    def cmap(self, f: Callable[[B], A]) -> Contravariant[F, B]:
+        """Contravariant map
+
+        Args:
+            f (Callable[[B], A]): _description_
+
+        Returns:
+            Contravariant[F, B]: _description_
+        """
+        ... 

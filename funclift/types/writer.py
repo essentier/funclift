@@ -7,13 +7,13 @@ import logging
 log = logging.getLogger(__name__)
 
 Mnd = Monoid | int | list
-W = TypeVar('W', bound=Mnd)
+W = TypeVar("W", bound=Mnd)
 # W = TypeVar('W')
-V = TypeVar('V')
-B = TypeVar('B')
-C = TypeVar('C')
-E = TypeVar('E')
-T = TypeVar('T', bound=Mnd)
+V = TypeVar("V")
+B = TypeVar("B")
+C = TypeVar("C")
+E = TypeVar("E")
+T = TypeVar("T", bound=Mnd)
 
 
 @dataclass
@@ -52,9 +52,10 @@ class Writer(Generic[W, V]):
         new_written = cast(W, self.written + new_writer.written)
         return Writer(new_writer.value, new_written)
 
-    def ap(self: Writer[W, Callable[[C], E]],
-           other: Writer[W, C]) -> Writer[W, E]:
-        return other.fmap(self.value)
+    def ap(self: Writer[W, Callable[[C], E]], other: Writer[W, C]) -> Writer[W, E]:
+        new_writer = other.fmap(self.value)
+        new_written = cast(W, self.written + new_writer.written)
+        return Writer(new_writer.value, new_written)
 
 
 def tell(w: W) -> Writer[W, None]:
@@ -71,6 +72,7 @@ class LogWriter(Writer[list[str], V]):
     @staticmethod
     def pure(a: E) -> LogWriter[E]:
         return LogWriter(a, [])
+
 
 # class IntWriter(Writer[int, V]):
 #     @staticmethod

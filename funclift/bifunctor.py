@@ -11,11 +11,11 @@ D = TypeVar('D')
 F = TypeVar('F', covariant=True)
 
 
-class BiFunctor(Generic[F, A, B], Protocol):
+class Bifunctor(Generic[F, A, B], Protocol):
     """BiFunctor"""
 
     def bimap(self, fl: Callable[[A], C],
-              fr: Callable[[B], D]) -> BiFunctor[F, C, D]:
+              fr: Callable[[B], D]) -> Bifunctor[F, C, D]:
         """_summary_
 
         Args:
@@ -27,7 +27,7 @@ class BiFunctor(Generic[F, A, B], Protocol):
         """
         ...
 
-    def first(self, fl: Callable[[A], C]) -> BiFunctor[F, C, B]:
+    def first(self, fl: Callable[[A], C]) -> Bifunctor[F, C, B]:
         """_summary_
 
         Args:
@@ -38,7 +38,7 @@ class BiFunctor(Generic[F, A, B], Protocol):
         """
         ...
 
-    def second(self, fr: Callable[[B], D]) -> BiFunctor[F, A, D]:
+    def second(self, fr: Callable[[B], D]) -> Bifunctor[F, A, D]:
         """_summary_
 
         Args:
