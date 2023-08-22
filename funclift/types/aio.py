@@ -33,7 +33,7 @@ class AIO(Generic[A]):
 
         return AIO(new_awaitable())
 
-    def group(self, *awaitables):
+    def par(self, *awaitables):
         async def new_awaitable():
             tasks = []
             async with asyncio.TaskGroup() as tg:

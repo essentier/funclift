@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "funclift"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = ["Essentier <support@essentier.com>"]
 readme = "README.md"
