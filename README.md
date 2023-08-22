@@ -8,6 +8,6 @@ Documentation, examples and tutorials of funclift: https://www.essentier.com/doc
 
 `pip install funclift`
 
-## Get Started
+## Tutorials
 
-Coming soon!
+https://github.com/essentier/funclift-tutorials

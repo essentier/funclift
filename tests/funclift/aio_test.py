@@ -1,8 +1,9 @@
 # https://docs.python.org/3/library/asyncio-task.html
 
 import asyncio
-from funclift.fp.monad_runner import monads_runner
 from funclift.types.aio import AIO
+from funclift.fp.monad_runner import run_monads
+from funclift.fp.curry import curry
 import time
 import pytest
 import logging
@@ -10,43 +11,59 @@ import logging
 log = logging.getLogger(__name__)
 
 
-@monads_runner
-def program5():
-    a = yield AIO.pure(5)
-    log.debug(f'a {a}')
-    b = yield AIO.pure(2)
-    log.debug(f'b {b}')
-    yield a + b
+def add_5(n: int) -> int:
+    return n + 5
 
 
-# def test_example5():
-#     result = program5().unsafe_run()
-#     log.debug(f'result {result}')
+@curry
+def sum(a: int, b: int) -> int:
+    return a + b
 
 
-async def say_after(delay, what):
-    await asyncio.sleep(delay)
-    log.debug(what)
+def add_5_aio(n: int) -> AIO[int]:
+    return AIO.succeed(n + 5)
 
 
 @pytest.mark.asyncio
-async def test_await_in_sequence():
-    log.debug(f'started at {time.strftime("%X")}')
-
-    await say_after(1, 'hello')
-    await say_after(2, 'world')
-
-    log.debug(f'finished at {time.strftime("%X")}')
+async def test_aio_functor():
+    aio = AIO.succeed(10)
+    aio2 = aio.fmap(add_5)
+    task = aio2.unsafe_run()
+    result = await task
+    assert result == 15
 
 
 @pytest.mark.asyncio
-async def test_await_concurrently():
-    task1 = asyncio.create_task(say_after(1, 'hello'))
-    task2 = asyncio.create_task(say_after(2, 'world'))
+async def test_aio_applicative():
+    aio5 = AIO.succeed(5)
+    aio2 = AIO.succeed(2)
 
-    log.debug(f'started at {time.strftime("%X")}')
+    sum_aio = AIO.succeed(sum)
+    aio = sum_aio.ap(aio5).ap(aio2)
+    task = aio.unsafe_run()
+    result = await task
+    assert result == 7
 
-    await task1
-    await task2
 
-    log.debug(f'finished at {time.strftime("%X")}')
+@pytest.mark.asyncio
+async def test_aio_monad():
+    aio = AIO.succeed(10)
+    aio2 = aio.flatmap(add_5_aio)
+    task = aio2.unsafe_run()
+    result = await task
+    assert result == 15
+
+
+def create_program_monads():
+    num1 = yield AIO.succeed(10)
+    num2 = yield add_5_aio(num1)
+    return AIO.succeed(num2)
+
+
+@pytest.mark.asyncio
+async def test_aio_monad_do_notation():
+    monads = create_program_monads()
+    program = run_monads(monads)
+    task = program.unsafe_run()
+    result = await task
+    assert result == 15
