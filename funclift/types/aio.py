@@ -67,8 +67,7 @@ class AIO(Generic[A]):
 
         Args:
             option (Option[A]): the option from which to create an AIO.
-            or_else (Callable[[], Exception]): this function will be invoked
-              when the passed in Option is Nothing.
+            or_else (Callable[[], Exception]): this function will be invoked when the passed in Option is Nothing.
 
         Returns:
             AIO[A] | AIO[Exception]: _description_
@@ -93,6 +92,17 @@ class AIO(Generic[A]):
         return AIO(awaitable)
 
     def then(self, f: Callable[[A], Awaitable[B]]) -> AIO[B]:
+        """Use this method to create a new AIO that runs this AIO followed by an awaitable.
+        The awaitable is created by passing the result of this AIO to the passed in function
+        f.
+
+        Args:
+            f (Callable[[A], Awaitable[B]]): function that takes the result of this AIO and creates an awaitable.
+
+        Returns:
+            AIO[B]: a new AIO that runs this AIO followed by an awaitable.
+        """
+
         async def new_awaitable():
             a = await self.awaitable
             b = await f(a)
