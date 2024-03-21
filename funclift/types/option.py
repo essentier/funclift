@@ -34,6 +34,12 @@ class Option(Generic[A]):
     """
 
     @staticmethod
+    def flift(f: Callable[[A], B]) -> Option[B]:
+        def _f(a: Option[A]) -> Option[B]:
+            return a.fmap(f)
+        return _f
+
+    @staticmethod
     def pure(a: E) -> Some[E]:
         """Creates a [`Some`][funclift.types.option.Some] instance that
         contains the passed-in parameter as its value.

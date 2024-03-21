@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 A = TypeVar("A", covariant=True)
 B = TypeVar("B")
 F = TypeVar("F")
+G = TypeVar("G")
 
 
 class Functor(Generic[F, A], Protocol):
